@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title> chamma </title>
+   <link rel="stylesheet" href="statements.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</head>
+<body>
+   <div class="container">
+          <div id="hero">
+           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+             <nav class="navbar navbar-expand-lg navbar-light bg-light">
+               <div class="container-fluid">
+                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                   <span class="navbar-toggler-icon"></span>
+                 </button>
+                 <div class="collapse navbar-collapse" id="navbarNav">
+                   <ul class="navbar-nav">
+                       
+                     <li class="nav-item">
+                       <a class="nav-link active" href="#">statements</a>
+                     </li>
+                     <li class="nav-item">
+                       <a class="nav-link" href="contribution.html">contribution</a>
+                     </li>
+                       <li class="nav-item">
+                         <a class="nav-link" href="logout.html">logout</a>
+                       </li>
+                   </ul>
+                 </div>
+               </div>
+             </nav>
+       <h1>
+       <h2>Statements</h2>	
+   </div>
+   <br>
+   <div id="display">
+       <div id="loader">
+           <h4> Loading</h4>
+       </div>
+   <div class="row">
+           <div id="allNames"></div>
+   </div>
+   <div class="row">
+
+           <div id="expected"></div>
+   </div>
+   <div class="row">
+
+           <div id="allshares"></div>
+    
+   </div>
+   <div class="row">
+   
+           <div id="arrears"></div>
+       </div>
+   </div>
+       <div id="errorMessage">
+           <h2> Failed to get data. Please refresh </h2>
+       </div>
+   </div>
+   <script>
+       var d = new Date();
+       year1 = d.getFullYear();
+       month2 = d.getMonth() + 1;
+       year2 = 2014;
+       month1 = 12;
+       if (month1 > month2){
+           lol5 = year1 - 1;
+           lol6 = month2 + 12;
+           calc1 = lol5 - year2;
+           calc2 = lol6 - month1;
+           monthtotal = calc1 * 12 + calc2;
+           calculation = monthtotal * 1000
+       } else{
+           lol7 = year1 - year2;
+           lol8 = month2 - month1;
+           monthtotal = lol7 * 12 + lol8;
+           calculation = monthtotal * 1000
+       }
+       let allNamesElm = document.getElementById("allNames")
+       let loaderElm = document.getElementById("loader")
+       let errorMessageElm = document.getElementById("errorMessage")
+       function setErrorDisplay(){
+           loaderElm.style.display = "none"
+           allNamesElm.style.display = "none"
+           errorMessageElm.style.display = "block"
+       }
+       fetch("https://api.apispreadsheets.com/data/17196/").then(res=>{
+           if (res.status === 200){
+               res.json().then(data=>{
+                   const yourData = data["data"]
+                   for(let i = 3; i < 4; i++){
+                       let rowInfo = yourData[i]
+                       let rowInfoDiv = document.createElement("div")
+                       rowInfoDiv.classList.add("Members-row")
+                       let rowInfoDiv1 = document.createElement("div")
+                       let rowMembers = document.createElement("h4")
+                       let rowMembersNode = document.createTextNode(rowInfo["Members"])
+                       rowMembers.appendChild(rowMembersNode)
+                       rowMembers.classList.add("Members")
+                       let rowSharesNode = rowInfo["Shares"]
+                       oof = parseInt(calculation- rowSharesNode)
+                       document.getElementById('expected').innerHTML = "Expected Shares: ksh " + calculation
+                       document.getElementById('allshares').innerHTML = " Shares: ksh " + rowSharesNode
+                       document.getElementById('arrears').innerHTML = " Arreas: ksh " + oof
+                       rowInfoDiv.appendChild(rowMembers)
+                       allNamesElm.appendChild(rowInfoDiv)
+                   }
+                   loaderElm.style.display = "none"
+                   allNamesElm.style.display = "block"
+                   errorMessageElm.style.display = "none"
+               }).catch(err => {
+                   setErrorDisplay()
+               })
+           }
+           else{
+               setErrorDisplay()
+           }
+       }).catch(err =>{
+           setErrorDisplay()
+       })
+   </script>
+</body>
+</html>
