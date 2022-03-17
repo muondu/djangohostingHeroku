@@ -1,2 +1,2 @@
 # hostingHeroku
-Hosting Heroku
+Hosting a django project using Heroku.
